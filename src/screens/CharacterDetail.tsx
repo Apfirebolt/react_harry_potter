@@ -8,8 +8,6 @@ const CharacterDetail = () => {
   const { character, fetchCharacterById } = useStore();
   const [loading, setLoading] = useState<boolean>(false);
 
-  console.log('CharacterDetail characterId:', character);
-
   useEffect(() => {
     setLoading(true);
     fetchCharacterById(characterId).then(() => setLoading(false));
