@@ -8,6 +8,7 @@ const HomePage = React.lazy(() => import("./screens/Home.tsx"));
 const Spells = React.lazy(() => import("./screens/Spells.tsx"));
 const Students = React.lazy(() => import("./screens/Students.tsx"));
 const Staff = React.lazy(() => import("./screens/Staff.tsx"));
+const House = React.lazy(() => import("./screens/House.tsx"));
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/spells" element={<Spells/>} />
           <Route path="/students" element={<Students/>} />
           <Route path="/staff" element={<Staff/>} />
+          <Route path="/house" element={<House/>} />
         </Routes>
       <Footer />
       <ToastContainer />
