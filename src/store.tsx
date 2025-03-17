@@ -5,6 +5,7 @@ import axiosInstance from "./plugins/interceptor.ts";
 
 interface StoreState {
   characters: Character[];
+  character: Character;
   spells: Spell[];
   students: Character[];
   staff: Character[];
@@ -16,6 +17,7 @@ interface StoreState {
   fetchSpells: () => Promise<void>;
   fetchStudents: () => Promise<void>;
   fetchStaff: () => Promise<void>;
+  fetchCharacterById: (id: string) => Promise<Character>;
 }
 
 const useStore = create<StoreState>((set) => ({
@@ -71,6 +73,14 @@ const useStore = create<StoreState>((set) => ({
     try {
       const { data } = await axiosInstance.get<Character[]>(`characters/staff`);
       set({ staff: data });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  fetchCharacterById: async (id: string) => {
+    try {
+      const { data } = await axiosInstance.get<Character[]>(`character/${id}`);
+      set({ character: data[0] });
     } catch (error) {
       console.error(error);
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import useStore from "@/store.tsx";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
 
 const Home = () => {
@@ -8,6 +9,7 @@ const Home = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(25);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   // Fetch characters from the API
   const fetchData = async () => {
@@ -26,7 +28,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchData(searchText);
+    fetchData();
   }, []);
 
   // Load more characters when user scrolls to the bottom of the page
@@ -41,6 +43,10 @@ const Home = () => {
     if (window.scrollY === 0) {
       setVisibleCount(25);
     }
+  }
+
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
   }
 
   useEffect(() => {
@@ -92,6 +98,9 @@ const Home = () => {
                     </p>
                     <p>Patronus: {character.patronus}</p>
                     <p>Actor: {character.actor}</p>
+                    <button onClick={() => goToCharacterDetail(character.id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))

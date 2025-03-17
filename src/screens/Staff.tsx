@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
 import useStore from "@/store.tsx";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
 import Character from "@/types/Character.tsx";
 
@@ -7,11 +8,12 @@ const Staff = () => {
   const { staff, fetchStaff } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // Fetch staff from the API
-  const fetchStaffMembers = async (searchText: string) => {
+  const fetchStaffMembers = async () => {
     setLoading(true);
-    await fetchStaff(searchText);
+    await fetchStaff();
     setLoading(false);
   };
   
@@ -24,8 +26,12 @@ const Staff = () => {
     staffMember.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
+  }
+
   useEffect(() => {
-    fetchStaffMembers(searchText);
+    fetchStaffMembers();
   }, []);
 
   return (
@@ -72,6 +78,12 @@ const Staff = () => {
                     </p>
                     <p>Patronus: {staffMember.patronus}</p>
                     <p>Actor: {staffMember.actor}</p>
+                    <button
+                      onClick={() => goToCharacterDetail(staffMember.id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                    >
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))
