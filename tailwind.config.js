@@ -14,12 +14,12 @@ export default {
   		},
   		colors: {
         primary: {
-          100: "#222831",
-          200: "#00ADB5",
-          300: "#EEEEEE",
+          100: "#80CBC4",
+          200: "#A94A4A",
+          300: "#E4EFE7",
         },
         secondary: {
-          100: "#DBE2EF",
+          100: "#FFB433",
           200: "#3F72AF",
           300: "#112D4E",
         },

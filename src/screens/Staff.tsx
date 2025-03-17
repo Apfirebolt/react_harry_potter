@@ -39,7 +39,7 @@ const Staff = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="p-6 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold text-center mb-4">
             Hogwarts Staff
           </h1>
@@ -80,7 +80,7 @@ const Staff = () => {
                     <p>Actor: {staffMember.actor}</p>
                     <button
                       onClick={() => goToCharacterDetail(staffMember.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                      className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2"
                     >
                       View Details
                     </button>

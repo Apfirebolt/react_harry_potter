@@ -57,7 +57,7 @@ const Houses = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="p-6 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold text-center mb-4">
             Hogwarts Houses
           </h1>
@@ -115,7 +115,7 @@ const Houses = () => {
                     <p>Actor: {student.actor}</p>
                     <button
                       onClick={() => goToCharacterDetail(student.id)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                      className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2"
                     >
                       View Details
                     </button>

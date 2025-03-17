@@ -13,12 +13,12 @@ const CharacterDetail = () => {
     fetchCharacterById(characterId).then(() => setLoading(false));
   }, [characterId]);
   return (
-    <div className="min-h-screen bg-primary-300 container mx-auto">
+    <div className="min-h-screen bg-primary-100 container mx-auto">
       {loading ? (
         <Loader />
       ) : (
         character && (
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-primary-100 p-6 rounded-lg shadow-lg">
             <h1 className="text-2xl font-bold text-center mb-4">
               {character.name}
             </h1>

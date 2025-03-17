@@ -59,7 +59,7 @@ const Home = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+        <div className="p-6 rounded-lg shadow-lg">
           <h1 className="text-2xl font-bold text-center mb-4">
             Harry Potter Characters
           </h1>
@@ -98,7 +98,7 @@ const Home = () => {
                     </p>
                     <p>Patronus: {character.patronus}</p>
                     <p>Actor: {character.actor}</p>
-                    <button onClick={() => goToCharacterDetail(character.id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">
+                    <button onClick={() => goToCharacterDetail(character.id)} className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2">
                       View Details
                     </button>
                   </div>
