@@ -1,65 +1,38 @@
 import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
-import axios from "axios";
+import useStore from "@/store.tsx";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
-
-interface Character {
-  id: string;
-  name: string;
-  species: string;
-  gender: string;
-  house: string;
-  dateOfBirth: string;
-  ancestry: string;
-  eyeColour: string;
-  hairColour: string;
-  wand: {
-    wood: string;
-    core: string;
-    length: number;
-  };
-  patronus: string;
-  actor: string;
-  image: string;
-  alive: boolean;
-  hogwartsStudent: boolean;
-  hogwartsStaff: boolean;
-  alternate_names: string[];
-  alternate_actors: string[];
-  yearOfBirth: number;
-}
+import Character from "@/types/Character.tsx";
 
 const Staff = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { staff, fetchStaff } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  // Fetch characters from the API
-  const fetchCharacters = async (searchText: string) => {
+  // Fetch staff from the API
+  const fetchStaffMembers = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.get<Character[]>(
-        `https://hp-api.onrender.com/api/characters/staff`
-      );
-      const filteredData = data.filter(
-        (character) =>
-          character.hogwartsStaff &&
-          character.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setCharacters(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
+    await fetchStaff();
     setLoading(false);
   };
-
-  // Call the delayedFetchCharacters function when user types in the input field
+  
+  // Call the fetchStaffMembers function when user types in the input field
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
+  const filteredStaff = staff.filter((staffMember) =>
+    staffMember.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
+  }
+
   useEffect(() => {
-    fetchCharacters(searchText);
-  }, [searchText]);
+    fetchStaffMembers();
+  }, []);
 
   return (
     <div className="min-h-screen bg-primary-300 container mx-auto">
@@ -79,32 +52,38 @@ const Staff = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {characters && characters.length > 0 ? (
-              characters.map((character) => (
+            {filteredStaff && filteredStaff.length > 0 ? (
+              filteredStaff.map((staffMember: Character) => (
                 <div
-                  key={character.id}
+                  key={staffMember.id}
                   className="p-4 border border-gray-300 rounded-lg"
                 >
                   <div className="flex flex-col items-center">
                     <img
-                      src={character.image}
-                      alt={character.name}
+                      src={staffMember.image}
+                      alt={staffMember.name}
                       className="w-32 h-32 my-3 rounded-full"
                     />
-                    <p className="font-bold">{character.name}</p>
-                    <p>Species: {character.species}</p>
-                    <p>Gender: {character.gender}</p>
-                    <p>House: {character.house}</p>
-                    <p>Date of Birth: {character.dateOfBirth}</p>
-                    <p>Ancestry: {character.ancestry}</p>
-                    <p>Eye Colour: {character.eyeColour}</p>
-                    <p>Hair Colour: {character.hairColour}</p>
+                    <p className="font-bold">{staffMember.name}</p>
+                    <p>Species: {staffMember.species}</p>
+                    <p>Gender: {staffMember.gender}</p>
+                    <p>House: {staffMember.house}</p>
+                    <p>Date of Birth: {staffMember.dateOfBirth}</p>
+                    <p>Ancestry: {staffMember.ancestry}</p>
+                    <p>Eye Colour: {staffMember.eyeColour}</p>
+                    <p>Hair Colour: {staffMember.hairColour}</p>
                     <p>
-                      Wand: {character.wand.wood}, {character.wand.core},{" "}
-                      {character.wand.length}
+                      Wand: {staffMember.wand.wood}, {staffMember.wand.core},{" "}
+                      {staffMember.wand.length}
                     </p>
-                    <p>Patronus: {character.patronus}</p>
-                    <p>Actor: {character.actor}</p>
+                    <p>Patronus: {staffMember.patronus}</p>
+                    <p>Actor: {staffMember.actor}</p>
+                    <button
+                      onClick={() => goToCharacterDetail(staffMember.id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                    >
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))

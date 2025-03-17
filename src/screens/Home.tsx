@@ -1,29 +1,20 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import axios from "axios";
+import useStore from "@/store.tsx";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
-import Character from "../types/Character.tsx";
 
 const Home = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { characters, fetchCharacters } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(25);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   // Fetch characters from the API
-  const fetchCharacters = async (searchText: string) => {
+  const fetchData = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.get<Character[]>(
-        `https://hp-api.onrender.com/api/characters`
-      );
-      const filteredData = data.filter((character) =>
-        character.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setCharacters(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
+    await fetchCharacters();
     setLoading(false);
   };
 
@@ -37,7 +28,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchCharacters(searchText);
+    fetchData();
   }, []);
 
   // Load more characters when user scrolls to the bottom of the page
@@ -52,6 +43,10 @@ const Home = () => {
     if (window.scrollY === 0) {
       setVisibleCount(25);
     }
+  }
+
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
   }
 
   useEffect(() => {
@@ -103,6 +98,9 @@ const Home = () => {
                     </p>
                     <p>Patronus: {character.patronus}</p>
                     <p>Actor: {character.actor}</p>
+                    <button onClick={() => goToCharacterDetail(character.id)} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))

@@ -3,7 +3,6 @@ import axios from "axios";
 import Loader from "../components/Loader.tsx";
 import Character from "../types/Character.tsx";
 
-
 const Houses = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchText, setSearchText] = useState<string>("");

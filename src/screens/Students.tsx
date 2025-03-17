@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
 import Loader from "../components/Loader.tsx";
+import { useNavigate } from "react-router-dom";
 import useStore from "@/store.tsx";
 
 
@@ -7,6 +8,7 @@ const Students = () => {
   const { students, fetchStudents } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // Fetch characters from the API
   const delayedFetchCharacters = async () => {
@@ -19,6 +21,10 @@ const Students = () => {
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
+
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
+  }
 
   useEffect(() => {
     delayedFetchCharacters();
@@ -68,6 +74,12 @@ const Students = () => {
                     </p>
                     <p>Patronus: {character.patronus}</p>
                     <p>Actor: {character.actor}</p>
+                    <button
+                      onClick={() => goToCharacterDetail(character.id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                    >
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))
