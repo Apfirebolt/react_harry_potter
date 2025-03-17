@@ -1,27 +1,17 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import useStore from "@/store.tsx";
 import Loader from "../components/Loader.tsx";
-import Spell from "../types/Spell.tsx";
 
 
 const Spells: React.FC = () => {
-  const [spells, setSpells] = useState<Spell[]>([]);
+  const { spells, fetchSpells } = useStore();
   const [loading, setLoading] = useState<boolean>(false);
 
+
   const fetchData = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        `https://hp-api.onrender.com/api/spells`
-      );
-      if (response) {
-        setLoading(false);
-        setSpells(response.data);
-      }
-    } catch (error) {
-      setLoading(false);
-      console.error("Error fetching data:", error);
-    }
+    setLoading(true);
+    await fetchSpells();
+    setLoading(false);
   };
 
   useEffect(() => {
