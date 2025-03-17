@@ -2,6 +2,34 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const HeaderComponent: React.FC = () => {
+
+  interface Link {
+    name: string;
+    url: string;
+  }
+
+  const links: Link[] = [
+    {
+      name: "Home",
+      url: "/",
+    },
+    {
+      name: "Characters",
+      url: "/characters",
+    },
+    {
+      name: "Spells",
+      url: "/spells",
+    },
+    {
+      name: "Students",
+      url: "/students",
+    },
+    {
+      name: "Staff",
+      url: "/staff",
+    },
+  ];
   return (
     <nav className="bg-primary-100 border-gray-200 px-2 sm:px-4 py-4 dark:bg-gray-900">
       <div className="container flex flex-wrap justify-between items-center mx-auto">
@@ -32,15 +60,16 @@ const HeaderComponent: React.FC = () => {
         </button>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/characters">Characters</Link>
-            </li>
-            <li>
-              <Link to="/spells">Spells</Link>
-            </li>
+            {links.map((link) => (
+              <li key={link.name}>
+                <Link
+                  to={link.url}
+                  className="block py-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -49,3 +78,6 @@ const HeaderComponent: React.FC = () => {
 };
 
 export default HeaderComponent;
+
+
+
