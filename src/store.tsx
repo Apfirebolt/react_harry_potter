@@ -16,8 +16,10 @@ interface StoreState {
   fetchCharacters: () => Promise<void>;
   fetchSpells: () => Promise<void>;
   fetchStudents: () => Promise<void>;
+  fetchHouseStudents: (house: string) => Promise<void>;
   fetchStaff: () => Promise<void>;
   fetchCharacterById: (id: string) => Promise<Character>;
+  resetStudents: () => void;
 }
 
 const useStore = create<StoreState>((set) => ({
@@ -42,6 +44,9 @@ const useStore = create<StoreState>((set) => ({
   getStaff: () => {
     const state = useStore.getState();
     return state.staff;
+  },
+  resetStudents: () => {
+    set({ students : [] });
   },
   fetchCharacters: async () => {
     try {
@@ -81,6 +86,16 @@ const useStore = create<StoreState>((set) => ({
     try {
       const { data } = await axiosInstance.get<Character[]>(`character/${id}`);
       set({ character: data[0] });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  fetchHouseStudents: async (house: string) => {
+    try {
+      const { data } = await axiosInstance.get<Character[]>(
+        `characters/house/${house}`
+      );
+      set({ students: data });
     } catch (error) {
       console.error(error);
     }

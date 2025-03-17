@@ -1,30 +1,22 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import axios from "axios";
+import useStore from "@/store.tsx";
+import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
 import Character from "../types/Character.tsx";
 
 const Houses = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { students, fetchHouseStudents, resetStudents } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedHouse, setSelectedHouse] = useState<string>("Ravenclaw");
 
   const houses = ["Gryffindor", "Hufflepuff", "Ravenclaw", "Slytherin"];
+  const navigate = useNavigate();
 
   // Fetch characters from the API based on the selected house
   const fetchCharacters = async (house: string) => {
     setLoading(true);
-    try {
-      const { data } = await axios.get<Character[]>(
-        `https://hp-api.onrender.com/api/characters/house/${house}`
-      );
-      const filteredData = data.filter((character) =>
-        character.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setCharacters(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
+    await fetchHouseStudents(house);
     setLoading(false);
   };
 
@@ -39,11 +31,26 @@ const Houses = () => {
     setSearchText(e.target.value);
   };
 
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const goToCharacterDetail = (id: string) => {
+    navigate(`/character/${id}`);
+  };
+
   useEffect(() => {
     if (selectedHouse) {
       fetchCharacters(selectedHouse);
     }
-  }, [searchText, selectedHouse]);
+  }, [selectedHouse]);
+
+  useEffect(() => {
+    return () => {
+      // console.log("unmount");
+      resetStudents();
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-primary-300 container mx-auto">
@@ -78,32 +85,40 @@ const Houses = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {characters && characters.length > 0 ? (
-              characters.map((character) => (
+            {filteredStudents && filteredStudents.length > 0 ? (
+              filteredStudents.map((student: Character) => (
                 <div
-                  key={character.id}
+                  key={student.id}
                   className="p-4 border border-gray-300 rounded-lg"
                 >
                   <div className="flex flex-col items-center">
                     <img
-                      src={character.image}
-                      alt={character.name}
+                      src={student.image}
+                      alt={student.name}
                       className="w-32 h-32 my-3 rounded-full"
                     />
-                    <p className="font-bold">{character.name}</p>
-                    <p>Species: {character.species}</p>
-                    <p>Gender: {character.gender}</p>
-                    <p>House: {character.house}</p>
-                    <p>Date of Birth: {character.dateOfBirth}</p>
-                    <p>Ancestry: {character.ancestry}</p>
-                    <p>Eye Colour: {character.eyeColour}</p>
-                    <p>Hair Colour: {character.hairColour}</p>
-                    <p>
-                      Wand: {character.wand.wood}, {character.wand.core},{" "}
-                      {character.wand.length}
-                    </p>
-                    <p>Patronus: {character.patronus}</p>
-                    <p>Actor: {character.actor}</p>
+                    <p className="font-bold">{student.name}</p>
+                    <p>Species: {student.species}</p>
+                    <p>Gender: {student.gender}</p>
+                    <p>House: {student.house}</p>
+                    <p>Date of Birth: {student.dateOfBirth}</p>
+                    <p>Ancestry: {student.ancestry}</p>
+                    <p>Eye Colour: {student.eyeColour}</p>
+                    <p>Hair Colour: {student.hairColour}</p>
+                    {student.wand && (
+                      <p>
+                        Wand: {student.wand.wood}, {student.wand.core},{" "}
+                        {student.wand.length}
+                      </p>
+                    )}
+                    <p>Patronus: {student.patronus}</p>
+                    <p>Actor: {student.actor}</p>
+                    <button
+                      onClick={() => goToCharacterDetail(student.id)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2"
+                    >
+                      View Details
+                    </button>
                   </div>
                 </div>
               ))
