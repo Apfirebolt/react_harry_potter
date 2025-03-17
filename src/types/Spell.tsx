@@ -3,3 +3,5 @@ interface Spell {
   name: string;
   description: string;
 }
+
+export default Spell;

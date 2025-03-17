@@ -1,30 +1,17 @@
 import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
-import axios from "axios";
 import Loader from "../components/Loader.tsx";
-import Character from "../types/Character.tsx";
+import useStore from "@/store.tsx";
 
 
 const Students = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { students, fetchStudents } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch characters from the API
-  const fetchCharacters = async (searchText: string) => {
+  const delayedFetchCharacters = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.get<Character[]>(
-        `https://hp-api.onrender.com/api/characters/students`
-      );
-      const filteredData = data.filter(
-        (character) =>
-          character.hogwartsStudent &&
-          character.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setCharacters(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
+    await fetchStudents();
     setLoading(false);
   };
 
@@ -34,8 +21,8 @@ const Students = () => {
   };
 
   useEffect(() => {
-    fetchCharacters(searchText);
-  }, [searchText]);
+    delayedFetchCharacters();
+  }, []);
 
   return (
     <div className="min-h-screen bg-primary-300 container mx-auto">
@@ -55,8 +42,8 @@ const Students = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {characters && characters.length > 0 ? (
-              characters.map((character) => (
+            {students && students.length > 0 ? (
+              students.map((character) => (
                 <div
                   key={character.id}
                   className="p-4 border border-gray-300 rounded-lg"
