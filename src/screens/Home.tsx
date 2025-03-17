@@ -1,29 +1,18 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from "react";
-import axios from "axios";
+import useStore from "@/store.tsx";
 import Loader from "../components/Loader.tsx";
-import Character from "../types/Character.tsx";
 
 const Home = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { characters, fetchCharacters } = useStore();
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(25);
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch characters from the API
-  const fetchCharacters = async (searchText: string) => {
+  const fetchData = async () => {
     setLoading(true);
-    try {
-      const { data } = await axios.get<Character[]>(
-        `https://hp-api.onrender.com/api/characters`
-      );
-      const filteredData = data.filter((character) =>
-        character.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setCharacters(filteredData);
-    } catch (error) {
-      console.error(error);
-    }
+    await fetchCharacters();
     setLoading(false);
   };
 
@@ -37,7 +26,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchCharacters(searchText);
+    fetchData(searchText);
   }, []);
 
   // Load more characters when user scrolls to the bottom of the page

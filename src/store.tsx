@@ -7,14 +7,21 @@ interface StoreState {
   characters: Character[];
   spells: Spell[];
   students: Character[];
+  staff: Character[];
+  error: any;
   getCharacters: () => Character[];
   getSpells: () => Spell[];
   getStudents: () => Character[];
+  fetchCharacters: () => Promise<void>;
+  fetchSpells: () => Promise<void>;
+  fetchStudents: () => Promise<void>;
+  fetchStaff: () => Promise<void>;
 }
 
 const useStore = create<StoreState>((set) => ({
   characters: [],
   spells: [],
+  staff: [],
   students: [],
   error: null,
   getCharacters: () => {
@@ -28,6 +35,11 @@ const useStore = create<StoreState>((set) => ({
   getStudents: () => {
     const state = useStore.getState();
     return state.students;
+  },
+  // As a getter this does not seem to work
+  getStaff: () => {
+    const state = useStore.getState();
+    return state.staff;
   },
   fetchCharacters: async () => {
     try {
@@ -51,6 +63,14 @@ const useStore = create<StoreState>((set) => ({
         `characters/students`
       );
       set({ students: data });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+  fetchStaff: async () => {
+    try {
+      const { data } = await axiosInstance.get<Character[]>(`characters/staff`);
+      set({ staff: data });
     } catch (error) {
       console.error(error);
     }
