@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "../components/Loader.tsx";
+import Spell from "../types/Spell.tsx";
 
-interface Spell {
-  id: string;
-  name: string;
-  description: string;
-}
 
 const Spells: React.FC = () => {
   const [spells, setSpells] = useState<Spell[]>([]);

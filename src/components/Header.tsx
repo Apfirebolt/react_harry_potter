@@ -29,6 +29,10 @@ const HeaderComponent: React.FC = () => {
       name: "Staff",
       url: "/staff",
     },
+    {
+      name: "House",
+      url: "/house",
+    },
   ];
   return (
     <nav className="bg-primary-100 border-gray-200 px-2 sm:px-4 py-4 dark:bg-gray-900">
