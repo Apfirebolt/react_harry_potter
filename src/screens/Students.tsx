@@ -1,8 +1,8 @@
-import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import Loader from "../components/Loader.tsx";
 import { useNavigate } from "react-router-dom";
 import useStore from "@/store.tsx";
-
+import { useTransition, animated } from "react-spring";
 
 const Students = () => {
   const { students, fetchStudents } = useStore();
@@ -10,25 +10,35 @@ const Students = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  // Fetch characters from the API
   const delayedFetchCharacters = async () => {
     setLoading(true);
     await fetchStudents();
     setLoading(false);
   };
 
-  // Call the delayedFetchCharacters function when user types in the input field
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
 
   const goToCharacterDetail = (id: string) => {
     navigate(`/character/${id}`);
-  }
+  };
 
   useEffect(() => {
     delayedFetchCharacters();
   }, []);
+
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const transitions = useTransition(filteredStudents, {
+    from: { opacity: 0, transform: "translateX(-100%)" },
+    enter: { opacity: 1, transform: "translateX(0%)" },
+    leave: { opacity: 0, transform: "translateX(-100%)" },
+    keys: (student) => student.id,
+    config: { duration: 200 },
+  });
 
   return (
     <div className="min-h-screen bg-primary-300 container mx-auto">
@@ -36,7 +46,7 @@ const Students = () => {
         <Loader />
       ) : (
         <div className="p-6 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-center mb-4">
+          <h1 className="text-2xl bg-secondary-200 text-primary-300 px-2 py-3 font-bold text-center mb-4">
             Hogwarts Students
           </h1>
           <input
@@ -48,46 +58,43 @@ const Students = () => {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {students && students.length > 0 ? (
-              students.map((character) => (
-                <div
-                  key={character.id}
-                  className="p-4 border border-gray-300 rounded-lg"
-                >
-                  <div className="flex flex-col items-center">
-                    <img
-                      src={character.image}
-                      alt={character.name}
-                      className="w-32 h-32 my-3 rounded-full"
-                    />
-                    <p className="font-bold">{character.name}</p>
-                    <p>Species: {character.species}</p>
-                    <p>Gender: {character.gender}</p>
-                    <p>House: {character.house}</p>
-                    <p>Date of Birth: {character.dateOfBirth}</p>
-                    <p>Ancestry: {character.ancestry}</p>
-                    <p>Eye Colour: {character.eyeColour}</p>
-                    <p>Hair Colour: {character.hairColour}</p>
-                    <p>
-                      Wand: {character.wand.wood}, {character.wand.core},{" "}
-                      {character.wand.length}
-                    </p>
-                    <p>Patronus: {character.patronus}</p>
-                    <p>Actor: {character.actor}</p>
-                    <button
-                      onClick={() => goToCharacterDetail(character.id)}
-                      className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2"
-                    >
-                      View Details
-                    </button>
-                  </div>
+            {transitions((style, student) => (
+              <animated.div
+                key={student.id}
+                style={{ ...style }}
+                className="p-4 border border-gray-300 rounded-lg"
+                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              >
+                <div className="flex flex-col items-center">
+                  <img
+                    src={student.image}
+                    alt={student.name}
+                    className="w-32 h-32 my-3 rounded-full"
+                  />
+                  <p className="font-bold">{student.name}</p>
+                  <p>Species: {student.species}</p>
+                  <p>Gender: {student.gender}</p>
+                  <p>House: {student.house}</p>
+                  <p>Date of Birth: {student.dateOfBirth}</p>
+                  <p>Ancestry: {student.ancestry}</p>
+                  <p>Eye Colour: {student.eyeColour}</p>
+                  <p>Hair Colour: {student.hairColour}</p>
+                  <p>
+                    Wand: {student.wand.wood}, {student.wand.core},{" "}
+                    {student.wand.length}
+                  </p>
+                  <p>Patronus: {student.patronus}</p>
+                  <p>Actor: {student.actor}</p>
+                  <button
+                    onClick={() => goToCharacterDetail(student.id)}
+                    className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2"
+                  >
+                    View Details
+                  </button>
                 </div>
-              ))
-            ) : (
-              <div className="p-2 text-center text-gray-500">
-                No students found
-              </div>
-            )}
+              </animated.div>
+            ))}
           </div>
         </div>
       )}

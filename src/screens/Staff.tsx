@@ -40,7 +40,7 @@ const Staff = () => {
         <Loader />
       ) : (
         <div className="p-6 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-center mb-4">
+          <h1 className="text-2xl bg-secondary-200 text-primary-300 px-2 py-3 font-bold text-center mb-4">
             Hogwarts Staff
           </h1>
           <input

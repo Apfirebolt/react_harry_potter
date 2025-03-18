@@ -58,8 +58,8 @@ const Houses = () => {
         <Loader />
       ) : (
         <div className="p-6 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-center mb-4">
-            Hogwarts Houses
+          <h1 className="text-2xl bg-secondary-200 text-primary-300 px-2 py-3 font-bold text-center mb-4">
+            Hogwarts House Members
           </h1>
           <div className="flex justify-center mb-4">
             {houses.map((house) => (
