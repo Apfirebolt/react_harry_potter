@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTransition, animated } from "react-spring";
+import { FaTimes } from "react-icons/fa";
+
 
 const HeaderComponent: React.FC = () => {
-
   interface Link {
     name: string;
     url: string;
@@ -30,8 +32,49 @@ const HeaderComponent: React.FC = () => {
       url: "/house",
     },
   ];
+
+  const [open, setOpen] = useState(false);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+
+  const transitions = useTransition(open, {
+    from: { opacity: 0, transform: "translateY(-20px)" },
+    enter: { opacity: 1, transform: "translateY(0)" },
+    leave: { opacity: 0, transform: "translateY(-20px)" },
+    config: { duration: 200 },
+  });
+
   return (
     <nav className="bg-primary-200 border-gray-200 px-2 sm:px-4 py-4">
+      {transitions((style, item) =>
+        item && (
+          <animated.div style={style} className="my-3 md:hidden">
+            <ul className="flex flex-col mt-4 bg-secondary-200 text-white rounded-lg border border-gray-100">
+              <li className="flex justify-end">
+                <button
+                  type="button"
+                  className="p-4 text-white hover:bg-secondary-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 shadow-md rounded-md"
+                  onClick={handleToggle}
+                >
+                  <FaTimes />
+                </button>
+              </li>
+              {links.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    to={link.url}
+                    className="block text-center p-4 dark:text-gray-300 dark:hover:text-gray-100 hover:text-secondary-300 hover:bg-primary-100 transition-all duration-150"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </animated.div>
+        )
+      )}
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <p className="text-3xl text-white font-bold w-1/3">
           Harry Potter World
@@ -39,9 +82,10 @@ const HeaderComponent: React.FC = () => {
         <button
           data-collapse-toggle="navbar-default"
           type="button"
-          className="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+          className="inline-flex items-center p-2 ml-3 text-sm text-white rounded-lg md:hidden hover:bg-secondary-300 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
           aria-controls="navbar-default"
           aria-expanded="false"
+          onClick={handleToggle}
         >
           <span className="sr-only">Open main menu</span>
           <svg
@@ -78,6 +122,3 @@ const HeaderComponent: React.FC = () => {
 };
 
 export default HeaderComponent;
-
-
-
