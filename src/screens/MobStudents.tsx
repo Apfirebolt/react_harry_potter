@@ -17,8 +17,6 @@ const Students = observer(() => {
 
   const delayedFetchCharacters = async () => {
     setLoading(true);
-    console.log("Fetching students from MobX store...");
-    // 4. Call the action directly on the store instance
     await fetchStudents();
     setLoading(false);
   };
