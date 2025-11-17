@@ -63,34 +63,73 @@ const Students = () => {
                 key={student.id}
                 style={{ ...style }}
                 className="p-4 border border-gray-300 rounded-lg"
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               >
-                <div className="flex flex-col items-center">
-                  <img
-                    src={student.image}
-                    alt={student.name}
-                    className="w-32 h-32 my-3 rounded-full"
-                  />
-                  <p className="font-bold">{student.name}</p>
-                  <p>Species: {student.species}</p>
-                  <p>Gender: {student.gender}</p>
-                  <p>House: {student.house}</p>
-                  <p>Date of Birth: {student.dateOfBirth}</p>
-                  <p>Ancestry: {student.ancestry}</p>
-                  <p>Eye Colour: {student.eyeColour}</p>
-                  <p>Hair Colour: {student.hairColour}</p>
-                  <p>
-                    Wand: {student.wand.wood}, {student.wand.core},{" "}
-                    {student.wand.length}
-                  </p>
-                  <p>Patronus: {student.patronus}</p>
-                  <p>Actor: {student.actor}</p>
+                <div className="flex flex-col items-center relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary-200 via-secondary-300 to-secondary-200"></div>
+
+                  <div className="relative mt-6 mb-4">
+                    <img
+                      src={student.image}
+                      alt={student.name}
+                      className="w-32 h-32 rounded-full object-cover border-4 border-secondary-200 shadow-lg"
+                    />
+                    <div className="absolute -bottom-2 -right-2 bg-secondary-300 text-white text-xs px-3 py-1 rounded-full shadow-md">
+                      {student.house || "Unknown"}
+                    </div>
+                  </div>
+
+                  <h3 className="font-bold text-xl text-gray-800 mb-2">
+                    {student.name}
+                  </h3>
+
+                  <div className="w-full space-y-2 text-sm">
+                    <div className="flex justify-between px-4 py-1 bg-gray-50 rounded">
+                      <span className="text-gray-600">Species:</span>
+                      <span className="font-medium">{student.species}</span>
+                    </div>
+                    <div className="flex justify-between px-4 py-1">
+                      <span className="text-gray-600">Gender:</span>
+                      <span className="font-medium">{student.gender}</span>
+                    </div>
+                    <div className="flex justify-between px-4 py-1 bg-gray-50 rounded">
+                      <span className="text-gray-600">Ancestry:</span>
+                      <span className="font-medium">
+                        {student.ancestry || "Unknown"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between px-4 py-1">
+                      <span className="text-gray-600">Born:</span>
+                      <span className="font-medium">
+                        {student.dateOfBirth || "Unknown"}
+                      </span>
+                    </div>
+                    {student.patronus && (
+                      <div className="flex justify-between px-4 py-1 bg-gray-50 rounded">
+                        <span className="text-gray-600">Patronus:</span>
+                        <span className="font-medium capitalize">
+                          {student.patronus}
+                        </span>
+                      </div>
+                    )}
+                    {student.actor && (
+                      <div className="flex justify-between px-4 py-1">
+                        <span className="text-gray-600">Actor:</span>
+                        <span className="font-medium">{student.actor}</span>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     onClick={() => goToCharacterDetail(student.id)}
-                    className="bg-secondary-300 text-white px-4 py-2 rounded-lg mt-2"
+                    className="w-full mt-4 bg-gradient-to-r from-secondary-300 to-secondary-200 hover:from-secondary-200 hover:to-secondary-300 text-white font-semibold px-4 py-3 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg"
                   >
-                    View Details
+                    View Full Details →
                   </button>
                 </div>
               </animated.div>
