@@ -128,6 +128,12 @@ npm run build
 ```
 This will create an optimized build of the application in the `dist` folder.
 
+## Writing test cases
+
+```
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+```
+
 ## How to Contribute
 
 1. Fork the repository.
