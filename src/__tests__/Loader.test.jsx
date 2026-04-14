@@ -1,12 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import LoaderComponent from '../components/Loader';
 
 describe('LoaderComponent', () => {
     it('should render the loader component', () => {
-        render(<LoaderComponent />);
-        const loaderDiv = screen.getByRole('generic');
-        expect(loaderDiv).toBeInTheDocument();
+        const { container } = render(<LoaderComponent />);
+        expect(container.querySelector('.animate-spin')).toBeInTheDocument();
     });
 
     it('should have the correct container classes', () => {

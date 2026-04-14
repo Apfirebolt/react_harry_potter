@@ -15,7 +15,13 @@ describe("HeaderComponent", () => {
 
   it("renders all navigation links", () => {
     renderWithRouter(<HeaderComponent />);
-    expect(screen.getAllByText("Home")).toHaveLength(2); // Desktop and mobile
+    const toggleButton = screen.getByRole("button", {
+      name: /open main menu/i,
+    });
+
+    fireEvent.click(toggleButton);
+
+    expect(screen.getAllByText("Home")).toHaveLength(2);
     expect(screen.getAllByText("Spells")).toHaveLength(2);
     expect(screen.getAllByText("Students")).toHaveLength(2);
     expect(screen.getAllByText("Staff")).toHaveLength(2);
