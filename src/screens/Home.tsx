@@ -18,7 +18,7 @@ const Home = () => {
     setLoading(false);
   };
 
-  const filteredCharacters = characters.filter((character) =>
+  const filteredCharacters = characters.filter((character: { name: string; }) =>
     character.name.toLowerCase().includes(searchText.toLowerCase())
   );
 

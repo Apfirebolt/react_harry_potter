@@ -28,7 +28,7 @@ const Students = () => {
     delayedFetchCharacters();
   }, []);
 
-  const filteredStudents = students.filter((student) =>
+  const filteredStudents = students.filter((student: { name: string; }) =>
     student.name.toLowerCase().includes(searchText.toLowerCase())
   );
 

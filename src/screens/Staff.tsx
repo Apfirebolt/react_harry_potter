@@ -22,7 +22,7 @@ const Staff = () => {
     setSearchText(e.target.value);
   };
 
-  const filteredStaff = staff.filter((staffMember) =>
+  const filteredStaff = staff.filter((staffMember: { name: string; }) =>
     staffMember.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
