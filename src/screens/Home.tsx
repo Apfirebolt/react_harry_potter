@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import React, { useState, useEffect, useMemo, useCallback, ChangeEvent } from "react";
 import useStore from "@/store.tsx";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
@@ -8,31 +8,34 @@ const Home = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(25);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
   // Fetch characters from the API
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     await fetchCharacters();
     setLoading(false);
-  };
+  }, [fetchCharacters]);
 
-  const filteredCharacters = characters.filter((character: { name: string; }) =>
-    character.name.toLowerCase().includes(searchText.toLowerCase())
+  const filteredCharacters = useMemo(
+    () =>
+      characters.filter((character: { name: string }) =>
+        character.name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [characters, searchText]
   );
 
   // Call the delayedFetchCharacters function when user types in the input field
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   // Load more characters when user scrolls to the bottom of the page
-  const onScrollWindow = () => {
+  const onScrollWindow = useCallback(() => {
     if (
       window.innerHeight + window.scrollY >= document.body.offsetHeight &&
       characters.length
@@ -43,16 +46,19 @@ const Home = () => {
     if (window.scrollY === 0) {
       setVisibleCount(25);
     }
-  };
+  }, [characters.length]);
 
-  const goToCharacterDetail = (id: string) => {
+  const goToCharacterDetail = useCallback(
+    (id: string) => {
     navigate(`/character/${id}`);
-  };
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     window.addEventListener("scroll", onScrollWindow);
     return () => window.removeEventListener("scroll", onScrollWindow);
-  }, [characters]);
+  }, [onScrollWindow]);
 
   return (
     <div className="min-h-screen bg-primary-300 container mx-auto">
@@ -118,7 +124,7 @@ const Home = () => {
               </div>
             )}
           </div>
-          <div ref={loaderRef} className="h-10"></div>
+          <div className="h-10"></div>
         </div>
       )}
     </div>

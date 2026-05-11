@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, useMemo, useCallback, ChangeEvent } from "react";
 import useStore from "@/store.tsx";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
@@ -14,30 +14,43 @@ const Houses = () => {
   const navigate = useNavigate();
 
   // Fetch characters from the API based on the selected house
-  const fetchCharacters = async (house: string) => {
+  const fetchCharacters = useCallback(
+    async (house: string) => {
     setLoading(true);
     await fetchHouseStudents(house);
     setLoading(false);
-  };
-
-  // Handle house tab click
-  const handleHouseClick = (house: string) => {
-    setSelectedHouse(house);
-    fetchCharacters(house);
-  };
-
-  // Handle search input change
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
-  };
-
-  const filteredStudents = students.filter((student) =>
-    student.name.toLowerCase().includes(searchText.toLowerCase())
+    },
+    [fetchHouseStudents]
   );
 
-  const goToCharacterDetail = (id: string) => {
+  // Handle house tab click
+  const handleHouseClick = useCallback(
+    (house: string) => {
+    setSelectedHouse(house);
+    fetchCharacters(house);
+    },
+    [fetchCharacters]
+  );
+
+  // Handle search input change
+  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  }, []);
+
+  const filteredStudents = useMemo(
+    () =>
+      students.filter((student) =>
+        student.name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [students, searchText]
+  );
+
+  const goToCharacterDetail = useCallback(
+    (id: string) => {
     navigate(`/character/${id}`);
-  };
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     if (selectedHouse) {

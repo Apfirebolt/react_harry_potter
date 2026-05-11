@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, useMemo, useCallback, ChangeEvent } from "react";
 import useStore from "@/store.tsx";
 import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader.tsx";
@@ -11,24 +11,31 @@ const Staff = () => {
   const navigate = useNavigate();
 
   // Fetch staff from the API
-  const fetchStaffMembers = async () => {
+  const fetchStaffMembers = useCallback(async () => {
     setLoading(true);
     await fetchStaff();
     setLoading(false);
-  };
+  }, [fetchStaff]);
   
   // Call the fetchStaffMembers function when user types in the input field
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-  };
+  }, []);
 
-  const filteredStaff = staff.filter((staffMember: { name: string; }) =>
-    staffMember.name.toLowerCase().includes(searchText.toLowerCase())
+  const filteredStaff = useMemo(
+    () =>
+      staff.filter((staffMember: { name: string }) =>
+        staffMember.name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [staff, searchText]
   );
 
-  const goToCharacterDetail = (id: string) => {
+  const goToCharacterDetail = useCallback(
+    (id: string) => {
     navigate(`/character/${id}`);
-  }
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     fetchStaffMembers();

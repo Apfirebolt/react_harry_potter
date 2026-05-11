@@ -9,8 +9,10 @@ const CharacterDetail = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-    fetchCharacterById(characterId).then(() => setLoading(false));
+    if (characterId) {
+      setLoading(true);
+      fetchCharacterById(characterId).then(() => setLoading(false));
+    }
   }, [characterId]);
   return (
     <div className="min-h-screen bg-primary-100 container mx-auto">

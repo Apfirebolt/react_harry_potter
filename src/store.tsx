@@ -5,7 +5,7 @@ import axiosInstance from "./plugins/interceptor.ts";
 
 interface StoreState {
   characters: Character[];
-  character: Character;
+  character: Character | null;
   spells: Spell[];
   students: Character[];
   staff: Character[];
@@ -13,38 +13,28 @@ interface StoreState {
   getCharacters: () => Character[];
   getSpells: () => Spell[];
   getStudents: () => Character[];
+  getStaff: () => Character[];
   fetchCharacters: () => Promise<void>;
   fetchSpells: () => Promise<void>;
   fetchStudents: () => Promise<void>;
   fetchHouseStudents: (house: string) => Promise<void>;
   fetchStaff: () => Promise<void>;
-  fetchCharacterById: (id: string) => Promise<Character>;
+  fetchCharacterById: (id: string) => Promise<Character | null>;
   resetStudents: () => void;
 }
 
-const useStore = create<StoreState>((set) => ({
+const useStore = create<StoreState>((set, get) => ({
   characters: [],
+  character: null,
   spells: [],
   staff: [],
   students: [],
   error: null,
-  getCharacters: () => {
-    const state = useStore.getState();
-    return state.characters;
-  },
-  getSpells: () => {
-    const state = useStore.getState();
-    return state.spells;
-  },
-  getStudents: () => {
-    const state = useStore.getState();
-    return state.students;
-  },
+  getCharacters: () => get().characters,
+  getSpells: () => get().spells,
+  getStudents: () => get().students,
   // As a getter this does not seem to work
-  getStaff: () => {
-    const state = useStore.getState();
-    return state.staff;
-  },
+  getStaff: () => get().staff,
   resetStudents: () => {
     set({ students : [] });
   },
@@ -85,9 +75,12 @@ const useStore = create<StoreState>((set) => ({
   fetchCharacterById: async (id: string) => {
     try {
       const { data } = await axiosInstance.get<Character[]>(`character/${id}`);
-      set({ character: data[0] });
+      const character = data[0] ?? null;
+      set({ character });
+      return character;
     } catch (error) {
       console.error(error);
+      return null;
     }
   },
   fetchHouseStudents: async (house: string) => {

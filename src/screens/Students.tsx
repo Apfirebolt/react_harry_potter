@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, useMemo, useCallback, ChangeEvent } from "react";
 import Loader from "../components/Loader.tsx";
 import { useNavigate } from "react-router-dom";
 import useStore from "@/store.tsx";
@@ -10,26 +10,33 @@ const Students = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const delayedFetchCharacters = async () => {
+  const delayedFetchCharacters = useCallback(async () => {
     setLoading(true);
     await fetchStudents();
     setLoading(false);
-  };
+  }, [fetchStudents]);
 
-  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
-  };
+  }, []);
 
-  const goToCharacterDetail = (id: string) => {
+  const goToCharacterDetail = useCallback(
+    (id: string) => {
     navigate(`/character/${id}`);
-  };
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     delayedFetchCharacters();
   }, []);
 
-  const filteredStudents = students.filter((student: { name: string; }) =>
-    student.name.toLowerCase().includes(searchText.toLowerCase())
+  const filteredStudents = useMemo(
+    () =>
+      students.filter((student: { name: string }) =>
+        student.name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [students, searchText]
   );
 
   const transitions = useTransition(filteredStudents, {

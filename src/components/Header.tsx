@@ -1,42 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
 import { FaTimes } from "react-icons/fa";
 
+const navLinks = [
+  { name: "Home", url: "/" },
+  { name: "Spells", url: "/spells" },
+  { name: "Students", url: "/students" },
+  { name: "Staff", url: "/staff" },
+  { name: "House", url: "/house" },
+];
+
 const HeaderComponent: React.FC = () => {
-  interface Link {
-    name: string;
-    url: string;
-  }
-
-  const links: Link[] = [
-    {
-      name: "Home",
-      url: "/",
-    },
-    {
-      name: "Spells",
-      url: "/spells",
-    },
-    {
-      name: "Students",
-      url: "/students",
-    },
-    {
-      name: "Staff",
-      url: "/staff",
-    },
-    {
-      name: "House",
-      url: "/house",
-    },
-  ];
-
   const [open, setOpen] = useState(false);
 
-  const handleToggle = () => {
-    setOpen(!open);
-  };
+  const handleToggle = useCallback(() => {
+    setOpen((prevOpen) => !prevOpen);
+  }, []);
 
   const transitions = useTransition(open, {
     from: { opacity: 0, transform: "translateY(-20px)" },
@@ -61,7 +41,7 @@ const HeaderComponent: React.FC = () => {
                     <FaTimes />
                   </button>
                 </li>
-                {links.map((link) => (
+                {navLinks.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.url}
@@ -106,7 +86,7 @@ const HeaderComponent: React.FC = () => {
         </button>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className="flex flex-col mt-4 bg-white/10 backdrop-blur-sm text-white rounded-lg md:flex-row md:space-x-1 md:mt-0 md:font-medium md:border-0 md:bg-transparent">
-            {links.map((link) => (
+            {navLinks.map((link) => (
               <li key={link.name}>
                 <Link
                   to={link.url}
